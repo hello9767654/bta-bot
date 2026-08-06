@@ -13,11 +13,15 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds]
 });
 
-// Register slash commands automatically
+// Slash Commands
 const commands = [
   new SlashCommandBuilder()
     .setName('ping')
-    .setDescription('Replies with Pong!')
+    .setDescription('Replies with Pong!'),
+
+  new SlashCommandBuilder()
+    .setName('help')
+    .setDescription('Shows the help menu.')
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
@@ -30,15 +34,15 @@ client.once(Events.ClientReady, async () => {
 
     await rest.put(
       Routes.applicationGuildCommands(
-        '1534398102516137994', // Your Application ID
-        '1529466987112300735'  // Your Server ID
+        '1534398102516137994',
+        '1529466987112300735'
       ),
       { body: commands }
     );
 
     console.log('✅ Slash commands registered!');
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
   }
 });
 
@@ -47,6 +51,31 @@ client.on(Events.InteractionCreate, async interaction => {
 
   if (interaction.commandName === 'ping') {
     await interaction.reply('🏓 Pong!');
+  }
+
+  if (interaction.commandName === 'help') {
+    await interaction.reply({
+      embeds: [
+        {
+          color: 0x5865F2,
+          title: '📘 BTA Bot Help',
+          description: 'Welcome to **Blox Trade Academy**!',
+          fields: [
+            {
+              name: '🛠 Utility',
+              value: '`/ping` - Check if the bot is online\n`/help` - Show this help menu'
+            },
+            {
+              name: '💎 Trading',
+              value: '`/value` *(Coming Soon)*\n`/wfl` *(Coming Soon)*\n`/trade` *(Coming Soon)*'
+            }
+          ],
+          footer: {
+            text: 'BTA Bot • Made by Sapphire'
+          }
+        }
+      ]
+    });
   }
 });
 

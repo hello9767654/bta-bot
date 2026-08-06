@@ -17,7 +17,11 @@ const client = new Client({
 const commands = [
   new SlashCommandBuilder()
     .setName('ping')
-    .setDescription('Replies with Pong!')
+    .setDescription('Replies with Pong!'),
+
+  new SlashCommandBuilder()
+    .setName('help')
+    .setDescription('Shows the help menu.')
 ].map(command => command.toJSON());
 
 const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
@@ -47,6 +51,29 @@ client.on(Events.InteractionCreate, async interaction => {
 
   if (interaction.commandName === 'ping') {
     await interaction.reply('🏓 Pong!');
+  }  if (interaction.commandName === 'help') {
+  await interaction.reply({
+    embeds: [
+      {
+        color: 0x5865F2,
+        title: '📘 BTA Bot Help',
+        description: 'Welcome to **Blox Trade Academy**!',
+        fields: [
+          {
+            name: '🛠 Utility',
+            value: '`/ping` - Check if the bot is online\n`/help` - Show this menu'
+          },
+          {
+            name: '💎 Coming Soon',
+            value: '`/value`\n`/wfl`\n`/trade`'
+          }
+        ],
+        footer: {
+          text: 'BTA Bot • Made for Blox Trade Academy'
+        }
+      }
+    ]
+  });
   }
 });
 
